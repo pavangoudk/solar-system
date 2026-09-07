@@ -1,27 +1,32 @@
-name: Node.js CI pavan kumar Test Pipeline
+name: Solar System Workflow Pavan Kumar
 
-on: [push, pull_request]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'feature/*'
 
 jobs:
-  build-and-test:
+  unit-testing:
+    name: Unit Testing
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [24.x]
-
+    env:
+      MONGO_URI: 'mongodb+srv://supercluster.d3jj.mongodb.net/superData'
+      MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
+      MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js Environment
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
+          cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
 
-      - name: Run tests
+      - name: Run Unit Tests
         run: npm test
-
-      - name: Start application
-        run: npm start
