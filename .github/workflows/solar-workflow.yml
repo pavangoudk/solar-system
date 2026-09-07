@@ -1,4 +1,4 @@
-name: Node.js CI [pavan kumar]
+name: Node.js CI pavan kumar Test Pipeline
 
 on: [push, pull_request]
 
