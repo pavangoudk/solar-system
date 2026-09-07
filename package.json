@@ -24,6 +24,6 @@
     "chai": "*",
     "chai-http": "*",
     "mocha": "*",
-    "mockingoose": "^2.16.2" 
+    "sinon": "*"
   }
 }
