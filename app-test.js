@@ -1,10 +1,10 @@
 let mongoose = require("mongoose");
-const mockingoose = require("mockingoose");
+const sinon = require("sinon");
 
-// 1. Force Mongoose to mark the database connection as instantly active (bypasses timeouts)
+// 1. Mark the database status connection hook as connected manually to bypass connection loops
 mongoose.connection.readyState = 1;
 
-// 2. Define the exact mock database results for the Planets API route to fetch
+// 2. Mock individual planet query responses for your /planet endpoints
 const mockPlanets = {
     1: { id: 1, name: 'Mercury' },
     2: { id: 2, name: 'Venus' },
@@ -16,19 +16,17 @@ const mockPlanets = {
     8: { id: 8, name: 'Neptune' }
 };
 
-// 3. Intercept the schema queries. 
-// Note: If the project model name is lowercase or capitalized differently, adjust 'Planet' accordingly.
-mockingoose(mongoose.model('Planet')).toReturn((query) => {
-    const requestedId = query.getQuery().id;
-    return mockPlanets[requestedId] || null;
-}, 'findOne');
+// 3. Stub the findOne mongoose operation BEFORE importing the server block
+// Note: Replace 'Planet' with the exact schema model name declared in your app code
+sinon.stub(mongoose.Model, 'findOne').callsFake(function(query) {
+    const id = query ? query.id : null;
+    return Promise.resolve(mockPlanets[id] || null);
+});
 
-// --- THE TEAM'S EXACT EXISTING CODE RESUMES HERE ---
+// --- THE TEAM'S EXACT UNTOUCHED INTEGRATION TEST SUITE CONTINUES HERE ---
 let server = require("./app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-
-
 
 // Assertion 
 chai.should();
