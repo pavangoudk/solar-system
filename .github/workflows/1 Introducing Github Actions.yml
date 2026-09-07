@@ -1,4 +1,4 @@
-name: CI Pipeline (1 Introducing Github Actions.yml )
+name: 1 Introducing Github Actions.yml( (Solar System Workflow ))
 on:
   push:
     branches: [ main ]
