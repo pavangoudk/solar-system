@@ -29,8 +29,8 @@ jobs:
         run: npm install
 
       - name: Run Unit Tests
-        # run: npm test
-        run: echo npm test the cluster mongodb no more exists 
+        run: npm test
+        #run: echo npm test the cluster mongodb no more exists 
 
 
 
