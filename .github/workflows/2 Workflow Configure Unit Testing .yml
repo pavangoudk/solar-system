@@ -34,4 +34,14 @@ jobs:
 
 
 
-        
+###############################################
+# Stage                              Description
+# Source                             Checkout	Pull code from GitHub repository
+# Unit Testing	                     Install dependencies, run tests, archive reports
+# Code Coverage                      Generate coverage metrics (errors ignored)
+# Containerization                   Build Docker image, smoke test, push to registry
+# Dev Deployment	                   Apply Kubernetes manifests, expose via Ingress
+# Dev Integration Testing            Validate live endpoint on development cluster
+# Manual Approval	                   Pause for reviewer sign-off
+# Prod Deployment	                   Deploy to production cluster
+# Prod Integration Testing	         Verify the production endpoint
