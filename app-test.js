@@ -1,29 +1,4 @@
 let mongoose = require("mongoose");
-const sinon = require("sinon");
-
-// 1. Mark the database status connection hook as connected manually to bypass connection loops
-mongoose.connection.readyState = 1;
-
-// 2. Mock individual planet query responses for your /planet endpoints
-const mockPlanets = {
-    1: { id: 1, name: 'Mercury' },
-    2: { id: 2, name: 'Venus' },
-    3: { id: 3, name: 'Earth' },
-    4: { id: 4, name: 'Mars' },
-    5: { id: 5, name: 'Jupiter' },
-    6: { id: 6, name: 'Saturn' },
-    7: { id: 7, name: 'Uranus' },
-    8: { id: 8, name: 'Neptune' }
-};
-
-// 3. Stub the findOne mongoose operation BEFORE importing the server block
-// Note: Replace 'Planet' with the exact schema model name declared in your app code
-sinon.stub(mongoose.Model, 'findOne').callsFake(function(query) {
-    const id = query ? query.id : null;
-    return Promise.resolve(mockPlanets[id] || null);
-});
-
-// --- THE TEAM'S EXACT UNTOUCHED INTEGRATION TEST SUITE CONTINUES HERE ---
 let server = require("./app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
