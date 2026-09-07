@@ -1,5 +1,4 @@
 let mongoose = require("mongoose");
-let mongoose = require("mongoose");
 const mockingoose = require("mockingoose");
 
 // 1. Force Mongoose to mark the database connection as instantly active (bypasses timeouts)
