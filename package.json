@@ -23,6 +23,7 @@
   "devDependencies": {
     "chai": "*",
     "chai-http": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "mockingoose": "^2.16.2" 
   }
 }
