@@ -1,7 +1,34 @@
 let mongoose = require("mongoose");
+let mongoose = require("mongoose");
+const mockingoose = require("mockingoose");
+
+// 1. Force Mongoose to mark the database connection as instantly active (bypasses timeouts)
+mongoose.connection.readyState = 1;
+
+// 2. Define the exact mock database results for the Planets API route to fetch
+const mockPlanets = {
+    1: { id: 1, name: 'Mercury' },
+    2: { id: 2, name: 'Venus' },
+    3: { id: 3, name: 'Earth' },
+    4: { id: 4, name: 'Mars' },
+    5: { id: 5, name: 'Jupiter' },
+    6: { id: 6, name: 'Saturn' },
+    7: { id: 7, name: 'Uranus' },
+    8: { id: 8, name: 'Neptune' }
+};
+
+// 3. Intercept the schema queries. 
+// Note: If the project model name is lowercase or capitalized differently, adjust 'Planet' accordingly.
+mockingoose(mongoose.model('Planet')).toReturn((query) => {
+    const requestedId = query.getQuery().id;
+    return mockPlanets[requestedId] || null;
+}, 'findOne');
+
+// --- THE TEAM'S EXACT EXISTING CODE RESUMES HERE ---
 let server = require("./app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
+
 
 
 // Assertion 
