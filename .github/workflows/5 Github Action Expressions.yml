@@ -3,33 +3,33 @@ name: 5 GitHub Actions expressions
 on: push
 
 jobs:
-  testing:
+  testing:    #Job1 testing
     strategy:
       matrix:
         os: ['windows-latest', 'ubuntu-latest']
     runs-on: ${{ matrix.os }}
     steps:
       - name: Linux Tests
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux'  #runs the step only on the linux system
         run: |
           export apikey='3$cuR3-t0k3N'
           echo "Running Tests on Ubuntu..."
 
       - name: Windows Tests
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' #runs the step only on the windows system
         run: |
           Set-Variable -Name "apikey" -Value "3$cuR3-t0k3N"
           echo "Running Tests on Windows..."
 
-  reports:
+  reports:  #Job2 reports
     needs: testing
     runs-on: ubuntu-latest
-    continue-on-error: true
+    continue-on-error: true     #the pipeline runs even the task fails
     steps:
       - name: Upload Report to AWS S3
         run: echo "Uploading reports..." && exit 1
 
-  deploy:
+  deploy: #Job3 deploy
     needs: reports
     runs-on: ubuntu-latest
     steps:
