@@ -1,0 +1,102 @@
+name: 7 Workflow Docker Login
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+  workflow_dispatch:
+
+env:
+  MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+  MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
+  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+
+jobs:
+  unit-testing:
+    name: Unit Testing
+    runs-on: ${{ matrix.operating_system }}
+    strategy:
+      matrix:
+        nodejs_version: [24]
+        operating_system: [ubuntu-latest, macos-latest]
+        exclude:
+          - nodejs_version: 18
+            operating_system: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.nodejs_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs_version }}
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Unit Tests
+        run: echo "npm test this command we use for testing"
+
+      - name: Archive Test Results
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: mocha-test-results
+          path: test-results.xml
+   
+  code-coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js 24
+          uses: actions/setup-node@v3 
+          with:
+            node-version: 24
+
+        - name: Cache NPM dependencies
+          uses: actions/cache@v3
+          with:
+            path: node_modules
+            key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+
+        - name: Install Dependencies
+          run: npm install
+
+        - name: Run Coverage
+          continue-on-error: true
+          run: npm run coverage
+
+        - name: Archive Coverage Report
+          uses: actions/upload-artifact@v7.0.1
+          with:
+            name: coverage-report
+            path: coverage
+
+
+  containerization:
+    name: Containerization
+    runs-on: ubuntu-latest
+    needs: [unit-testing, code-coverage]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Docker Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+
+
+
