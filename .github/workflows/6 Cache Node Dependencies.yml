@@ -47,32 +47,32 @@ jobs:
 
     
     code-coverage:
-    name: Code Coverage
-    runs-on: ubuntu-latest
-    steps:
-        - name: Checkout Repository
-        uses: actions/checkout@v4
+        name: Code Coverage
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
 
-        - name: Setup Node.js 24
-        uses: actions/setup-node@v3
-        with:
-            node-version: 24
+            - name: Setup Node.js 24
+              uses: actions/setup-node@v3 
+              with:
+                node-version: 24
 
-        - name: Cache NPM dependencies
-        uses: actions/cache@v3
-        with:
-            path: node_modules
-            key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+            - name: Cache NPM dependencies
+              uses: actions/cache@v3
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
 
-        - name: Install Dependencies
-        run: npm install
+            - name: Install Dependencies
+              run: npm install
 
-        - name: Run Coverage
-        continue-on-error: true
-        run: npm run coverage
+            - name: Run Coverage
+              continue-on-error: true
+              run: npm run coverage
 
-        - name: Archive Coverage Report
-        uses: actions/upload-artifact@v7.0.1
-        with:
-            name: coverage-report
-            path: coverage
+            - name: Archive Coverage Report
+              uses: actions/upload-artifact@v7.0.1
+              with:
+                name: coverage-report
+                path: coverage
