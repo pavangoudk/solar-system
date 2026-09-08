@@ -1,4 +1,4 @@
-name: 4 Archive Unit Test Reports
+name: 4 Archive Code Coverage Reports
 
 on:
   push:
