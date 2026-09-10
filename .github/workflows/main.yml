@@ -1,0 +1,26 @@
+name: Deploy Application
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target Environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      deploy_tests:
+        description: 'Run integration tests?'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show Parameter Values
+        run: |
+          echo "Deploying to: ${{ inputs.environment }}"
+          echo "Run tests? ${{ inputs.deploy_tests }}"
